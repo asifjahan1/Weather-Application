@@ -1,16 +1,14 @@
-// ignore_for_file: unused_local_variable, unused_element
+// ignore_for_file: unused_local_variable, unused_element, unnecessary_string_interpolations, unused_field
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   State createState() => _HomePageState();
@@ -18,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State with WidgetsBindingObserver {
   Position? _position;
-  late Map<String, dynamic> _weatherMap;
+  Map<String, dynamic> _weatherMap = {};
   late Map<String, dynamic> _forecastMap;
   late String _locationName = '';
   late String _areaName = '';
@@ -63,8 +61,9 @@ class _HomePageState extends State with WidgetsBindingObserver {
 
     try {
       _position = await Geolocator.getCurrentPosition();
+      await _getLocationName(_position!.latitude, _position!.longitude);
+      await _getAreaName(_position!.latitude, _position!.longitude);
       _fetchWeatherData();
-      _getLocationName(_position!.latitude, _position!.longitude);
     } catch (e) {
       _showErrorDialog('Error fetching location: $e');
     }
@@ -124,7 +123,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
             placemark.administrativeArea ??
             '';
         setState(() {
-          _locationName = city;
+          _locationName = city.isNotEmpty ? city : _weatherMap['name'];
         });
       }
     } catch (e) {
@@ -173,21 +172,21 @@ class _HomePageState extends State with WidgetsBindingObserver {
             if (_position != null)
               Column(
                 children: [
-                  Text(
-                    '${_position!.latitude}, ${_position!.longitude}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/location.png'),
+                      if (_weatherMap != null &&
+                          _weatherMap.containsKey('name'))
+                        Text(
+                          _weatherMap['name'],
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                    ],
                   ),
-                  if (_areaName.isNotEmpty)
-                    Text(
-                      'Area: $_areaName',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
                 ],
               ),
           ],
