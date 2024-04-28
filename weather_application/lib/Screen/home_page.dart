@@ -220,6 +220,14 @@ class _HomePageState extends State with WidgetsBindingObserver {
                     ),
                 ],
               ),
+
+              Text(
+                'Partly Cloudy - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20, // Adjust the font size as needed
+                ),
+              ),
             ],
           ),
         ),
