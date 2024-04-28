@@ -81,15 +81,26 @@ class _HomePageState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFF738BE3),
+        body: Row(
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            Text(
+              "${weatherMap!["name"]}",
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
