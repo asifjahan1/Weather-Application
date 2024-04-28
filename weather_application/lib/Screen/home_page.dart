@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
@@ -64,7 +67,9 @@ class _HomePageState extends State {
     forecastMap = Map<String, dynamic>.from(jsonDecode(forecastResponse.body));
     setState(() {});
 
-    print("Weather Response is $latitude,$longitude");
+    if (kDebugMode) {
+      print("Weather Response is $latitude,$longitude");
+    }
   }
 
   @override
@@ -76,45 +81,6 @@ class _HomePageState extends State {
 
   @override
   Widget build(BuildContext context) {
-    //var isLoaded;
-    return Scaffold(
-        backgroundColor: Colors.white,
-
-        //appBar: AppBar(title: Text("Weather App"), centerTitle: true),
-        body: Container(
-          //height: 400,
-          width: double.infinity,
-          decoration: const BoxDecoration(
-              // image: DecorationImage(
-              //     image: NetworkImage(
-              //         "https://msfsaddons.com/wp-content/uploads/2022/07/1b.jpg?ezimgfmt=ngcb12/notWebP"),
-              //     fit: BoxFit.fill),
-              ),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Column(
-                  children: [
-                    Text(
-                      // ignore: unnecessary_string_interpolations
-                      "${Jiffy.now().format(pattern: "ddMMM yyyy, h:mm a")}",
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.green),
-                    ),
-                    Text("${weatherMap?["name"] ?? "Unknown"}")
-                  ],
-                ),
-              ),
-              Text("${weatherMap?["main"]["temp"] ?? "Unknown"} °"),
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Column(
-                  children: [Text("data")],
-                ),
-              )
-            ],
-          ),
-        ));
+    return const Scaffold();
   }
 }
