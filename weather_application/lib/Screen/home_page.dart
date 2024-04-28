@@ -20,6 +20,12 @@ class _HomePageState extends State with WidgetsBindingObserver {
   late Map<String, dynamic> _forecastMap;
   late String _locationName = '';
   late String _areaName = '';
+  late bool _nightTime = false;
+
+  String getTimeOfDay(DateTime currentTime) {
+    int hour = currentTime.hour;
+    return (hour >= 6 && hour < 18) ? 'Day' : 'Night';
+  }
 
   String getWeatherCondition(int temperature) {
     if (temperature < 10) {
@@ -34,7 +40,18 @@ class _HomePageState extends State with WidgetsBindingObserver {
   bool isDayTime() {
     DateTime now = DateTime.now();
     int hour = now.hour;
-    return hour >= 6 && hour < 18; // Assuming day time is between 6 AM to 6 PM
+    return hour >= 6 && hour < 18;
+  }
+
+  String getWeatherConditionText(int temperature, bool isNight) {
+    String weatherCondition = getWeatherCondition(temperature);
+    String timeOfDay = isNight ? 'Day' : 'Night';
+    return '$timeOfDay';
+  }
+
+  bool isNight(DateTime time) {
+    int hour = time.hour;
+    return hour < 6 || hour > 18;
   }
 
   String getWeatherImage(String weatherCondition) {
@@ -66,8 +83,10 @@ class _HomePageState extends State with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _determinePosition();
+    DateTime currentTime = DateTime.now();
+    String timeOfDay = getTimeOfDay(currentTime);
   }
 
   @override
@@ -289,7 +308,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
                         _weatherMap['main']['temp'] != null &&
                         _weatherMap['main']['temp_max'] != null &&
                         _weatherMap['main']['temp_min'] != null
-                    ? '${getWeatherCondition(_weatherMap['main']['temp'].toInt())} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°'
+                    ? '${getWeatherConditionText(_weatherMap['main']['temp'].toInt(), _nightTime)} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°'
                     : 'Weather data not available',
                 style: const TextStyle(
                   color: Colors.white,
