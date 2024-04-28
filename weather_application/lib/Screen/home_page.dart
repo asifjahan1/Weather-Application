@@ -81,6 +81,16 @@ class _HomePageState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const Scaffold(
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
   }
 }
