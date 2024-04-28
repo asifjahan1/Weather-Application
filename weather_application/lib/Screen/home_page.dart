@@ -169,13 +169,21 @@ class _HomePageState extends State with WidgetsBindingObserver {
                   ),
               ],
             ),
+            const SizedBox(height: 8),
             if (_position != null)
               Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/location.png'),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Image.asset('assets/location.png'),
+                          Image.asset('assets/dot.png'),
+                        ],
+                      ),
+                      const SizedBox(width: 6),
                       if (_weatherMap != null &&
                           _weatherMap.containsKey('name'))
                         Text(
@@ -189,6 +197,8 @@ class _HomePageState extends State with WidgetsBindingObserver {
                   ),
                 ],
               ),
+
+            // frame 2 er part eidik theke shuru
           ],
         ),
       ),
