@@ -6,13 +6,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:jiffy/jiffy.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State {
   Position? position;
 
   determinePosition() async {
@@ -54,9 +54,9 @@ class _HomePageState extends State<HomePage> {
 
   fetchWeatherData() async {
     String WeatherUrl =
-        "https://api.openweathermap.org/data/2.5/weather?lat=latitude&lon=longitude&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
+        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
     String ForecastUrl =
-        "https://api.openweathermap.org/data/2.5/forecast?lat=latitude&lon=longitude&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
+        "https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
 
     var weatherResponse = await http.get(Uri.parse(WeatherUrl));
     var forecastResponse = await http.get(Uri.parse(ForecastUrl));
@@ -77,40 +77,44 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     //var isLoaded;
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+        backgroundColor: Colors.white,
 
-          //appBar: AppBar(title: Text("Weather App"), centerTitle: true),
-          body: Container(
-        height: 400,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(
-                    "https://msfsaddons.com/wp-content/uploads/2022/07/1b.jpg?ezimgfmt=ngcb12/notWebP"),
-                fit: BoxFit.cover)),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: Column(
-                children: [
-                  Text(
-                      "${Jiffy(DateTime.now()).format(pattern: "ddMMM yyyy, h:mm a")}"),
-                  Text(("${weatherMap!["name"]}"))
-                ],
+        //appBar: AppBar(title: Text("Weather App"), centerTitle: true),
+        body: Container(
+          //height: 400,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+              // image: DecorationImage(
+              //     image: NetworkImage(
+              //         "https://msfsaddons.com/wp-content/uploads/2022/07/1b.jpg?ezimgfmt=ngcb12/notWebP"),
+              //     fit: BoxFit.fill),
               ),
-            ),
-            Text("${weatherMap!["main"]["temp"]} °"),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Column(
-                children: [Text("data")],
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: Column(
+                  children: [
+                    Text(
+                      // ignore: unnecessary_string_interpolations
+                      "${Jiffy.now().format(pattern: "ddMMM yyyy, h:mm a")}",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.green),
+                    ),
+                    Text("${weatherMap?["name"] ?? "Unknown"}")
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
-      )),
-    );
+              Text("${weatherMap?["main"]["temp"] ?? "Unknown"} °"),
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Column(
+                  children: [Text("data")],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
