@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, unused_element
 
 import 'dart:convert';
 
@@ -17,10 +17,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State with WidgetsBindingObserver {
-  late Position _position;
+  Position? _position;
   late Map<String, dynamic> _weatherMap;
   late Map<String, dynamic> _forecastMap;
   late String _locationName = '';
+  late String _areaName = '';
 
   @override
   void initState() {
@@ -63,7 +64,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
     try {
       _position = await Geolocator.getCurrentPosition();
       _fetchWeatherData();
-      _getLocationName(_position.latitude, _position.longitude);
+      _getLocationName(_position!.latitude, _position!.longitude);
     } catch (e) {
       _showErrorDialog('Error fetching location: $e');
     }
@@ -72,8 +73,8 @@ class _HomePageState extends State with WidgetsBindingObserver {
   Future<void> _fetchWeatherData() async {
     const String apiKey =
         'IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ';
-    final double latitude = _position.latitude;
-    final double longitude = _position.longitude;
+    final double latitude = _position!.latitude;
+    final double longitude = _position!.longitude;
 
     String weatherUrl =
         "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
@@ -93,6 +94,22 @@ class _HomePageState extends State with WidgetsBindingObserver {
       setState(() {});
     } catch (e) {
       _showErrorDialog('Error fetching weather data: $e');
+    }
+  }
+
+  Future<void> _getAreaName(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        String region = placemark.administrativeArea ?? placemark.country ?? '';
+        setState(() {
+          _areaName = region;
+        });
+      }
+    } catch (e) {
+      print('Error getting region name: $e');
     }
   }
 
@@ -124,7 +141,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -135,32 +152,46 @@ class _HomePageState extends State with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF738BE3),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                // const SizedBox(width: 40),
                 if (_locationName.isNotEmpty)
                   Text(
                     _locationName,
                     style: const TextStyle(
                       color: Colors.white,
+                      fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                const Icon(Icons.more_horiz_outlined),
               ],
             ),
-          ),
-        ],
+            if (_position != null)
+              Column(
+                children: [
+                  Text(
+                    '${_position!.latitude}, ${_position!.longitude}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                  if (_areaName.isNotEmpty)
+                    Text(
+                      'Area: $_areaName',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
