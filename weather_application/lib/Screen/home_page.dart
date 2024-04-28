@@ -31,6 +31,38 @@ class _HomePageState extends State with WidgetsBindingObserver {
     }
   }
 
+  bool isDayTime() {
+    DateTime now = DateTime.now();
+    int hour = now.hour;
+    return hour >= 6 && hour < 18; // Assuming day time is between 6 AM to 6 PM
+  }
+
+  String getWeatherImage(String weatherCondition) {
+    if (isDayTime()) {
+      switch (weatherCondition) {
+        case 'Rain':
+          return 'assets/rainy.png';
+        case 'Clouds':
+          return 'assets/partly_cloud.png';
+        case 'Thunder':
+          return 'assets/day_thunder.png';
+        case 'Moderate':
+          return 'assets/moderate.png';
+        default:
+          return 'assets/sunny.png';
+      }
+    } else {
+      switch (weatherCondition) {
+        case 'Night fog':
+          return 'assets/night-fog.png';
+        case 'Rainy':
+          return 'assets/rainy.png';
+        default:
+          return 'assets/night.png';
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -214,25 +246,51 @@ class _HomePageState extends State with WidgetsBindingObserver {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/partly_cloudy.png', fit: BoxFit.cover),
-                  const SizedBox(width: 20),
-                  if (_weatherMap != null && _weatherMap.containsKey('main'))
-                    Row(
-                      children: [
-                        Text(
-                          '${_weatherMap['main']['temp'].toInt()}°',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 80,
-                          ),
+                  // Image asset
+                  Container(
+                    width: 100, // Adjust width as needed
+                    height: 100, // Adjust height as needed
+                    child: _weatherMap != null &&
+                            _weatherMap['weather'] != null &&
+                            _weatherMap['weather'].isNotEmpty
+                        ? Image.asset(
+                            getWeatherImage(_weatherMap['weather'][0]['main']),
+                            fit: BoxFit.cover,
+                          )
+                        : SizedBox(), // Display an empty SizedBox if data is not available
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ), // Spacing between image and temperature
+                  // Temperature
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _weatherMap != null &&
+                                _weatherMap['main'] != null &&
+                                _weatherMap['main']['temp'] != null
+                            ? '${_weatherMap['main']['temp'].toInt()}°'
+                            : 'N/A', // Display 'N/A' if temperature data is not available
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 80,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
 
               Text(
-                '${getWeatherCondition(_weatherMap['main']['temp'].toInt())} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°',
+                _weatherMap != null &&
+                        _weatherMap.containsKey('main') &&
+                        _weatherMap['main'] != null &&
+                        _weatherMap['main']['temp'] != null &&
+                        _weatherMap['main']['temp_max'] != null &&
+                        _weatherMap['main']['temp_min'] != null
+                    ? '${getWeatherCondition(_weatherMap['main']['temp'].toInt())} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°'
+                    : 'Weather data not available',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
