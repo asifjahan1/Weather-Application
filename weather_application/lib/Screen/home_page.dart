@@ -149,57 +149,79 @@ class _HomePageState extends State with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF738BE3),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (_locationName.isNotEmpty)
-                  Text(
-                    _locationName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (_position != null)
-              Column(
+    return Flexible(
+      child: Scaffold(
+        backgroundColor: const Color(0xFF738BE3),
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Image.asset('assets/location.png'),
-                          Image.asset('assets/dot.png'),
-                        ],
+                  if (_locationName.isNotEmpty)
+                    Text(
+                      _locationName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(width: 6),
-                      if (_weatherMap != null &&
-                          _weatherMap.containsKey('name'))
-                        Text(
-                          _weatherMap['name'],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                    ],
-                  ),
+                    ),
                 ],
               ),
+              const SizedBox(height: 8),
+              if (_position != null)
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.asset('assets/location.png'),
+                            Image.asset('assets/dot.png'),
+                          ],
+                        ),
+                        const SizedBox(width: 6),
+                        if (_weatherMap != null &&
+                            _weatherMap.containsKey('name'))
+                          Text(
+                            _weatherMap['name'],
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 25),
 
-            // frame 2 er part eidik theke shuru
-          ],
+              // frame 2 er part eidik theke shuru
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/partly_cloudy.png', fit: BoxFit.cover),
+                  const SizedBox(width: 20),
+                  if (_weatherMap != null && _weatherMap.containsKey('main'))
+                    Row(
+                      children: [
+                        Text(
+                          '${_weatherMap['main']['temp'].toInt()}°',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 80,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
