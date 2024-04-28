@@ -21,6 +21,16 @@ class _HomePageState extends State with WidgetsBindingObserver {
   late String _locationName = '';
   late String _areaName = '';
 
+  String getWeatherCondition(int temperature) {
+    if (temperature < 10) {
+      return 'Cloudy';
+    } else if (temperature >= 10 && temperature < 25) {
+      return 'Partly Cloudy';
+    } else {
+      return 'Sunny';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -222,10 +232,10 @@ class _HomePageState extends State with WidgetsBindingObserver {
               ),
 
               Text(
-                'Partly Cloudy - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°',
+                '${getWeatherCondition(_weatherMap['main']['temp'].toInt())} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 20, // Adjust the font size as needed
+                  fontSize: 20,
                 ),
               ),
             ],
