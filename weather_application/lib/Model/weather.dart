@@ -1,6 +1,6 @@
 class Weather {
   int id;
-  String main;
+  final String main;
   String description;
   String icon;
 
