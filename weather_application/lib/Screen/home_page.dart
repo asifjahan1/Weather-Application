@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:weather_application/Model/weather_data.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -225,25 +226,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
               // weather data fetching
               _buildWeatherFetching(),
+              const SizedBox(height: 8),
               _buildWeatherCondition(),
 
               const SizedBox(height: 20),
 
               // 3rd part forecasting
+              //
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // fetchDataFromForecastURL(); // Call the method to fetch data from the forecast URL
+                      // fetchDataFromForecastURL();
                     },
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.white.withOpacity(0.135),
                         side: const BorderSide(color: Colors.transparent),
                       ),
-                      onPressed:
-                          () {}, // Provide an empty onPressed function to avoid button click animation
+                      onPressed: () {},
                       child: const Text(
                         'Today',
                         style: TextStyle(color: Colors.white),
@@ -252,10 +254,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ),
                   const SizedBox(width: 9),
                   OutlinedButton(
-                    onPressed: () {
-                      // Fetch next days' forecast data
-                      // You can implement fetching logic here similar to fetchDataFromForecastURL()
-                    },
+                    onPressed: () {},
                     style: OutlinedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 103, 128, 210),
                       side: const BorderSide(color: Colors.transparent),
@@ -267,11 +266,70 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
+              _buildHourlyForecast(),
 
               // Sunrise and Sunset Part
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHourlyForecast() {
+    return SizedBox(
+      height: 150, // Adjust the height as needed
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount:
+              _forecastMap['list'] != null ? _forecastMap['list'].length : 0,
+          itemBuilder: (BuildContext context, int index) {
+            if (index % 1 != 0) {
+              return SizedBox(); // Skip this item
+            }
+
+            var forecast = _forecastMap['list'][index];
+            return _buildHourlyForecastItem(forecast, index);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHourlyForecastItem(dynamic forecast, int index) {
+    // Calculate the forecast time based on the current time and index
+    DateTime currentTime = DateTime.now();
+    DateTime forecastTime = currentTime.add(Duration(hours: index));
+
+    // Format the forecast time as desired (e.g., 1:00 AM, 2:00 AM, etc.)
+    String formattedTime = DateFormat('h a').format(forecastTime);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            formattedTime, // Display the formatted forecast time
+            style: TextStyle(color: Colors.white),
+          ),
+          SizedBox(height: 8),
+          // Display other forecast information like temperature, weather condition, etc.
+          Text(
+            '${forecast['main']['temp'].toInt()}°', // Temperature
+            style: TextStyle(color: Colors.white),
+          ),
+          SizedBox(height: 4),
+          Image.asset(
+            // Use appropriate weather icon based on forecast
+            getWeatherImage(forecast['weather'][0]['main']),
+            width: 40,
+            height: 40,
+          ),
+        ],
       ),
     );
   }
@@ -373,7 +431,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           : 'Weather data not available',
       style: const TextStyle(
         color: Colors.white,
-        fontSize: 20,
+        fontSize: 17,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
