@@ -285,16 +285,23 @@ class _HomePageState extends State with WidgetsBindingObserver {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _weatherMap != null &&
-                                _weatherMap['main'] != null &&
-                                _weatherMap['main']['temp'] != null
-                            ? '${_weatherMap['main']['temp'].toInt()}°'
-                            : 'N/A', // Display 'N/A' if temperature data is not available
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 80,
-                        ),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          if (_weatherMap != null &&
+                              _weatherMap['main'] != null &&
+                              _weatherMap['main']['temp'] != null)
+                            Text(
+                              '${_weatherMap['main']['temp'].toInt()}°',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 80,
+                              ),
+                            )
+                          else
+                            const CircularProgressIndicator(
+                                color: Colors.white),
+                        ],
                       ),
                     ],
                   ),
