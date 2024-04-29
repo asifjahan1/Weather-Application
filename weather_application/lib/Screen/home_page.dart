@@ -223,62 +223,8 @@ class _HomePageState extends State with WidgetsBindingObserver {
               const SizedBox(height: 25),
 
               // weather data fetching
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: _weatherMap['weather'] != null &&
-                            _weatherMap['weather'].isNotEmpty
-                        ? Image.asset(
-                            getWeatherImage(_weatherMap['weather'][0]['main']),
-                            fit: BoxFit.cover,
-                          )
-                        : const SizedBox(), // Display an empty SizedBox if data is not available
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ), // Spacing between image and temperature
-                  // Temperature
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          if (_weatherMap['main'] != null &&
-                              _weatherMap['main']['temp'] != null)
-                            Text(
-                              '${_weatherMap['main']['temp'].toInt()}°',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 80,
-                              ),
-                            )
-                          else
-                            const CircularProgressIndicator(
-                                color: Colors.white),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              Text(
-                _weatherMap.containsKey('main') &&
-                        _weatherMap['main'] != null &&
-                        _weatherMap['main']['temp'] != null &&
-                        _weatherMap['main']['temp_max'] != null &&
-                        _weatherMap['main']['temp_min'] != null
-                    ? '${getWeatherConditionText(_weatherMap['main']['temp'].toInt(), _nightTime)} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°'
-                    : 'Weather data not available',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
+              _buildWeatherFetching(),
+              _buildWeatherCondition(),
 
               // 3rd part forecasting
             ],
@@ -331,6 +277,66 @@ class _HomePageState extends State with WidgetsBindingObserver {
             ],
           ),
       ],
+    );
+  }
+
+  Widget _buildWeatherFetching() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 100,
+          height: 100,
+          child: _weatherMap['weather'] != null &&
+                  _weatherMap['weather'].isNotEmpty
+              ? Image.asset(
+                  getWeatherImage(_weatherMap['weather'][0]['main']),
+                  fit: BoxFit.cover,
+                )
+              : const SizedBox(), // Display an empty SizedBox if data is not available
+        ),
+        const SizedBox(
+          width: 5,
+        ), // Spacing between image and temperature
+        // Temperature
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                if (_weatherMap['main'] != null &&
+                    _weatherMap['main']['temp'] != null)
+                  Text(
+                    '${_weatherMap['main']['temp'].toInt()}°',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 80,
+                    ),
+                  )
+                else
+                  const CircularProgressIndicator(color: Colors.white),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeatherCondition() {
+    return Text(
+      _weatherMap.containsKey('main') &&
+              _weatherMap['main'] != null &&
+              _weatherMap['main']['temp'] != null &&
+              _weatherMap['main']['temp_max'] != null &&
+              _weatherMap['main']['temp_min'] != null
+          ? '${getWeatherConditionText(_weatherMap['main']['temp'].toInt(), _nightTime)} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°'
+          : 'Weather data not available',
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+      ),
     );
   }
 
