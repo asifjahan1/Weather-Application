@@ -331,7 +331,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
               _weatherMap['main']['temp'] != null &&
               _weatherMap['main']['temp_max'] != null &&
               _weatherMap['main']['temp_min'] != null
-          ? '${getWeatherConditionText(_weatherMap['main']['temp'].toInt(), _nightTime)} - H: ${_weatherMap['main']['temp_max'].toInt()}°, L: ${_weatherMap['main']['temp_min'].toInt()}°'
+          ? '${getWeatherConditionText(_weatherMap['main']['temp'].toInt(), _nightTime)} - H:${_weatherMap['main']['temp_max'].toInt()}° L:${_weatherMap['main']['temp_min'].toInt()}°'
           : 'Weather data not available',
       style: const TextStyle(
         color: Colors.white,
