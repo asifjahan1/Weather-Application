@@ -51,7 +51,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
 
   bool isNight(DateTime time) {
     int hour = time.hour;
-    return hour < 18 || hour > 6;
+    return hour < 6 || hour > 18;
   }
 
   String getWeatherImage(String weatherCondition) {
