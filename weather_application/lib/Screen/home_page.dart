@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Position? _position;
   WeatherData? _weatherData;
-  late Map<String, dynamic> _forecastMap;
+  Map<String, dynamic> _forecastMap = {};
   late String _locationName = '';
   late String _areaName = '';
   late final bool _nightTime = false;
@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(message),
         actions: [
           TextButton(
@@ -279,7 +279,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _buildHourlyForecast() {
     return SizedBox(
-      height: 150, // Adjust the height as needed
+      height: 150,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
@@ -287,10 +287,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           itemCount:
               _forecastMap['list'] != null ? _forecastMap['list'].length : 0,
           itemBuilder: (BuildContext context, int index) {
-            if (index % 1 != 0) {
-              return SizedBox(); // Skip this item
-            }
-
             var forecast = _forecastMap['list'][index];
             return _buildHourlyForecastItem(forecast, index);
           },
@@ -303,9 +299,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // Calculate the forecast time based on the current time and index
     DateTime currentTime = DateTime.now();
     DateTime forecastTime = currentTime.add(Duration(hours: index));
+    // DateTime forecastTime =
+    //     DateTime.fromMillisecondsSinceEpoch(forecast['dt'] * 1000);
+    // bool isAM = forecastTime.hour < 12;
+    // String time =
+    //     '${forecastTime.hour % 12 == 0 ? 12 : forecastTime.hour % 12}${isAM ? 'AM' : 'PM'}';
 
     // Format the forecast time as desired (e.g., 1:00 AM, 2:00 AM, etc.)
-    String formattedTime = DateFormat('h a').format(forecastTime);
+    String formattedTime = DateFormat('ha').format(forecastTime);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -314,20 +315,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           Text(
             formattedTime, // Display the formatted forecast time
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
-          SizedBox(height: 8),
-          // Display other forecast information like temperature, weather condition, etc.
-          Text(
-            '${forecast['main']['temp'].toInt()}°', // Temperature
-            style: TextStyle(color: Colors.white),
-          ),
-          SizedBox(height: 4),
+          const SizedBox(height: 10),
           Image.asset(
             // Use appropriate weather icon based on forecast
             getWeatherImage(forecast['weather'][0]['main']),
             width: 40,
             height: 40,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            '${forecast['main']['temp'].toInt()}°',
+            style: const TextStyle(color: Colors.white),
           ),
         ],
       ),
