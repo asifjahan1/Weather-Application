@@ -31,7 +31,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
     if (temperature < 10) {
       return 'Cloudy';
     } else if (temperature >= 10 && temperature < 25) {
-      return 'Partly Cloudy';
+      return 'Partly Cloud';
     } else {
       return 'Sunny';
     }
@@ -137,9 +137,9 @@ class _HomePageState extends State with WidgetsBindingObserver {
     final double longitude = _position!.longitude;
 
     String weatherUrl =
-        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
+        "https://api.openweathermap.org/data/2.5/weather?lat=23.7069417&lon=90.4207752&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
     String forecastUrl =
-        "https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
+        "https://api.openweathermap.org/data/2.5/forecast?lat=23.7069417&lon=90.4207752&units=metric&appid=f92bf340ade13c087f6334ed434f9761&fbclid=IwAR0vlebaouEmURClRdtuWEg7qeBOdbDxmQ5HM9JDJL_mj5uDS7xqy4kCGTQ";
 
     try {
       final http.Response weatherResponse =
@@ -226,7 +226,48 @@ class _HomePageState extends State with WidgetsBindingObserver {
               _buildWeatherFetching(),
               _buildWeatherCondition(),
 
+              const SizedBox(height: 20),
+
               // 3rd part forecasting
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // fetchDataFromForecastURL(); // Call the method to fetch data from the forecast URL
+                    },
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.135),
+                        side: const BorderSide(color: Colors.transparent),
+                      ),
+                      onPressed:
+                          () {}, // Provide an empty onPressed function to avoid button click animation
+                      child: const Text(
+                        'Today',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 9),
+                  OutlinedButton(
+                    onPressed: () {
+                      // Fetch next days' forecast data
+                      // You can implement fetching logic here similar to fetchDataFromForecastURL()
+                    },
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 103, 128, 210),
+                      side: const BorderSide(color: Colors.transparent),
+                    ),
+                    child: const Text(
+                      'Next Days',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Sunrise and Sunset Part
             ],
           ),
         ),
