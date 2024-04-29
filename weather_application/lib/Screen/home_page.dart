@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:weather_application/Model/weather_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,9 +15,9 @@ class HomePage extends StatefulWidget {
   State createState() => _HomePageState();
 }
 
-class _HomePageState extends State with WidgetsBindingObserver {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Position? _position;
-  Map<String, dynamic> _weatherMap = {};
+  WeatherData? _weatherData;
   late Map<String, dynamic> _forecastMap;
   late String _locationName = '';
   late String _areaName = '';
@@ -147,7 +148,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
       final http.Response forecastResponse =
           await http.get(Uri.parse(forecastUrl));
 
-      _weatherMap = Map<String, dynamic>.from(jsonDecode(weatherResponse.body));
+      _weatherData = WeatherData.fromJson(jsonDecode(weatherResponse.body));
       _forecastMap =
           Map<String, dynamic>.from(jsonDecode(forecastResponse.body));
 
@@ -184,7 +185,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
             placemark.administrativeArea ??
             '';
         setState(() {
-          _locationName = city.isNotEmpty ? city : _weatherMap['name'];
+          _locationName = city.isNotEmpty ? city : _weatherData!.name;
         });
       }
     } catch (e) {
@@ -295,7 +296,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
   Widget _buildWeatherInfo() {
     return Column(
       children: [
-        if (_position != null && _weatherMap.isNotEmpty)
+        if (_position != null && _weatherData != null)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -307,9 +308,9 @@ class _HomePageState extends State with WidgetsBindingObserver {
                 ],
               ),
               const SizedBox(width: 6),
-              if (_weatherMap.containsKey('name'))
+              if (_weatherData!.name.isNotEmpty)
                 Text(
-                  _weatherMap['name'],
+                  _weatherData!.name,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -328,10 +329,9 @@ class _HomePageState extends State with WidgetsBindingObserver {
         SizedBox(
           width: 100,
           height: 100,
-          child: _weatherMap['weather'] != null &&
-                  _weatherMap['weather'].isNotEmpty
+          child: _weatherData != null && _weatherData!.weather.isNotEmpty
               ? Image.asset(
-                  getWeatherImage(_weatherMap['weather'][0]['main']),
+                  getWeatherImage(_weatherData!.weather[0].main),
                   fit: BoxFit.cover,
                 )
               : const SizedBox(), // Display an empty SizedBox if data is not available
@@ -346,10 +346,9 @@ class _HomePageState extends State with WidgetsBindingObserver {
             Stack(
               alignment: Alignment.center,
               children: [
-                if (_weatherMap['main'] != null &&
-                    _weatherMap['main']['temp'] != null)
+                if (_weatherData != null)
                   Text(
-                    '${_weatherMap['main']['temp'].toInt()}°',
+                    '${_weatherData!.main.temp.toInt()}°',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 80,
@@ -366,13 +365,11 @@ class _HomePageState extends State with WidgetsBindingObserver {
   }
 
   Widget _buildWeatherCondition() {
+    bool isNightTime = isNight(DateTime.now());
+
     return Text(
-      _weatherMap.containsKey('main') &&
-              _weatherMap['main'] != null &&
-              _weatherMap['main']['temp'] != null &&
-              _weatherMap['main']['temp_max'] != null &&
-              _weatherMap['main']['temp_min'] != null
-          ? '${getWeatherConditionText(_weatherMap['main']['temp'].toInt(), _nightTime)} - H:${_weatherMap['main']['temp_max'].toInt()}° L:${_weatherMap['main']['temp_min'].toInt()}°'
+      _weatherData != null
+          ? '${getWeatherConditionText(_weatherData!.main.temp.toInt(), isNightTime)} - H:${_weatherData!.main.tempMax.toInt()}° L:${_weatherData!.main.tempMin.toInt()}°'
           : 'Weather data not available',
       style: const TextStyle(
         color: Colors.white,

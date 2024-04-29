@@ -2,7 +2,7 @@ import 'package:weather_application/Model/Sys.dart';
 import 'package:weather_application/Model/Wind.dart';
 import 'package:weather_application/Model/clouds.dart';
 import 'package:weather_application/Model/coord.dart';
-import 'package:weather_application/Model/main.dart';
+import 'package:weather_application/Model/main_data.dart';
 import 'package:weather_application/Model/weather.dart';
 
 class WeatherData {
