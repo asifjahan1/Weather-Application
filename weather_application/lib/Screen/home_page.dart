@@ -217,69 +217,28 @@ class _HomePageState extends State with WidgetsBindingObserver {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (_locationName.isNotEmpty)
-                    Text(
-                      _locationName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                ],
-              ),
+              _buildLocationInfo(),
               const SizedBox(height: 8),
-              if (_position != null)
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Image.asset('assets/location.png'),
-                            Image.asset('assets/dot.png'),
-                          ],
-                        ),
-                        const SizedBox(width: 6),
-                        if (_weatherMap != null &&
-                            _weatherMap.containsKey('name'))
-                          Text(
-                            _weatherMap['name'],
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
+              _buildWeatherInfo(),
               const SizedBox(height: 25),
 
-              // frame 2 er part eidik theke shuru
+              // weather data fetching
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Image asset
-                  Container(
-                    width: 100, // Adjust width as needed
-                    height: 100, // Adjust height as needed
-                    child: _weatherMap != null &&
-                            _weatherMap['weather'] != null &&
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: _weatherMap['weather'] != null &&
                             _weatherMap['weather'].isNotEmpty
                         ? Image.asset(
                             getWeatherImage(_weatherMap['weather'][0]['main']),
                             fit: BoxFit.cover,
                           )
-                        : SizedBox(), // Display an empty SizedBox if data is not available
+                        : const SizedBox(), // Display an empty SizedBox if data is not available
                   ),
                   const SizedBox(
-                    width: 20,
+                    width: 5,
                   ), // Spacing between image and temperature
                   // Temperature
                   Column(
@@ -288,8 +247,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
                       Stack(
                         alignment: Alignment.center,
                         children: [
-                          if (_weatherMap != null &&
-                              _weatherMap['main'] != null &&
+                          if (_weatherMap['main'] != null &&
                               _weatherMap['main']['temp'] != null)
                             Text(
                               '${_weatherMap['main']['temp'].toInt()}°',
@@ -309,8 +267,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
               ),
 
               Text(
-                _weatherMap != null &&
-                        _weatherMap.containsKey('main') &&
+                _weatherMap.containsKey('main') &&
                         _weatherMap['main'] != null &&
                         _weatherMap['main']['temp'] != null &&
                         _weatherMap['main']['temp_max'] != null &&
@@ -322,10 +279,58 @@ class _HomePageState extends State with WidgetsBindingObserver {
                   fontSize: 20,
                 ),
               ),
+
+              // 3rd part forecasting
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLocationInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (_locationName.isNotEmpty)
+          Text(
+            _locationName,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildWeatherInfo() {
+    return Column(
+      children: [
+        if (_position != null && _weatherMap.isNotEmpty)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.asset('assets/location.png'),
+                  Image.asset('assets/dot.png'),
+                ],
+              ),
+              const SizedBox(width: 6),
+              if (_weatherMap.containsKey('name'))
+                Text(
+                  _weatherMap['name'],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+            ],
+          ),
+      ],
     );
   }
 
