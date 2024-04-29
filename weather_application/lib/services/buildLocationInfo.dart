@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

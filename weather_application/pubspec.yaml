@@ -40,6 +40,7 @@ dependencies:
   jiffy: ^6.3.0
   intl: ^0.19.0
   geocoding: ^3.0.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
