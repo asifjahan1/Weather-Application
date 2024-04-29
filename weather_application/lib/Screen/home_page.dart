@@ -20,7 +20,7 @@ class _HomePageState extends State with WidgetsBindingObserver {
   late Map<String, dynamic> _forecastMap;
   late String _locationName = '';
   late String _areaName = '';
-  late bool _nightTime = false;
+  late final bool _nightTime = false;
 
   String getTimeOfDay(DateTime currentTime) {
     int hour = currentTime.hour;
@@ -45,13 +45,13 @@ class _HomePageState extends State with WidgetsBindingObserver {
 
   String getWeatherConditionText(int temperature, bool isNight) {
     String weatherCondition = getWeatherCondition(temperature);
-    String timeOfDay = isNight ? 'Day' : 'Night';
+    String timeOfDay = isNight ? 'Night' : 'Day';
     return '$timeOfDay';
   }
 
   bool isNight(DateTime time) {
     int hour = time.hour;
-    return hour < 6 || hour > 18;
+    return hour < 18 || hour > 6;
   }
 
   String getWeatherImage(String weatherCondition) {
