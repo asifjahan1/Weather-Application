@@ -222,10 +222,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               _buildLocationInfo(),
               const SizedBox(height: 8),
               _buildWeatherInfo(),
-              const SizedBox(height: 25),
+              const SizedBox(height: 10),
 
               // weather data fetching
               _buildWeatherFetching(),
+
+              const SizedBox(height: 8),
+              _buildWeatherCondition(),
+              //wind speed & humidity part
+              const SizedBox(height: 10),
+              _buildHumidityAndWindSpeed(),
+              const SizedBox(height: 20),
+
               // const SizedBox(height: 8),
               // _buildWeatherCondition(),
               // //wind speed & humidity part
@@ -272,17 +280,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               const SizedBox(height: 10),
               _buildHourlyForecast(),
 
-              // Additional container for customization
-              // Container(
-              //   width: 100,
-              //   height: double.infinity,
-              //   color: Colors.white,
-              //   child: Row(
-              //     children: [],
+              // Sunrise and Sunset Part
+              const SizedBox(height: 10),
+              // Expanded(
+              //   child: ClipRRect(
+              //     borderRadius: BorderRadius.circular(100),
+              //     child: Column(
+              //       children: [
+              //         Container(
+              //           width: 200,
+              //           height: 200,
+              //           decoration:
+              //               const BoxDecoration(color: Color(0xFFF7F8FA)),
+              //         )
+              //       ],
+              //     ),
               //   ),
               // ),
-
-              // Sunrise and Sunset Part
             ],
           ),
         ),
@@ -517,59 +531,48 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _buildWeatherFetching() {
-    return SingleChildScrollView(
-      // physics: const BouncingScrollPhysics(
-      //     decelerationRate: ScrollDecelerationRate.normal),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 100,
-                height: 100,
-                child: _weatherData != null && _weatherData!.weather.isNotEmpty
-                    ? Image.asset(
-                        getWeatherImage(_weatherData!.weather[0].main),
-                        fit: BoxFit.cover,
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: _weatherData != null && _weatherData!.weather.isNotEmpty
+                  ? Image.asset(
+                      getWeatherImage(_weatherData!.weather[0].main),
+                      fit: BoxFit.cover,
+                    )
+                  : const SizedBox(),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            // Temperature
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    if (_weatherData != null)
+                      Text(
+                        '${_weatherData!.main.temp.toInt()}°',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 80,
+                        ),
                       )
-                    : const SizedBox(),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              // Temperature
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      if (_weatherData != null)
-                        Text(
-                          '${_weatherData!.main.temp.toInt()}°',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 80,
-                          ),
-                        )
-                      else
-                        const CircularProgressIndicator(color: Colors.white),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          _buildWeatherCondition(),
-          //wind speed & humidity part
-          const SizedBox(height: 10),
-          _buildHumidityAndWindSpeed(),
-          const SizedBox(height: 20),
-          //Sunrise and Sunset part
-        ],
-      ),
+                    else
+                      const CircularProgressIndicator(color: Colors.white),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 
