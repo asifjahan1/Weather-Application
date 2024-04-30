@@ -309,17 +309,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     String formattedTime = DateFormat('ha').format(forecastTime);
 
     return Container(
+      //ajke ami eidike decoration korbo
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            formattedTime, // Display the formatted forecast time
+            formattedTime,
             style: const TextStyle(color: Colors.white),
           ),
           const SizedBox(height: 10),
           Image.asset(
-            // Use appropriate weather icon based on forecast
             getWeatherImage(forecast['weather'][0]['main']),
             width: 40,
             height: 40,
@@ -392,11 +392,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   getWeatherImage(_weatherData!.weather[0].main),
                   fit: BoxFit.cover,
                 )
-              : const SizedBox(), // Display an empty SizedBox if data is not available
+              : const SizedBox(),
         ),
         const SizedBox(
           width: 5,
-        ), // Spacing between image and temperature
+        ),
         // Temperature
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,7 +427,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     return Text(
       _weatherData != null
-          ? '${getWeatherConditionText(_weatherData!.main.temp.toInt(), isNightTime)} - H:${_weatherData!.main.tempMax.toInt()}° L:${_weatherData!.main.tempMin.toInt()}°'
+          ? '${_weatherData!.weather[0].description} - H:${_weatherData!.main.tempMax.toInt()}° L:${_weatherData!.main.tempMin.toInt()}°'
           : 'Weather data not available',
       style: const TextStyle(
         color: Colors.white,
