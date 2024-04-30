@@ -578,7 +578,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     return Text(
       _weatherData != null
-          ? '${_weatherData!.weather[0].description} - H:${_weatherData!.main.tempMax.toInt()}° L:${_weatherData!.main.tempMin.toInt()}°'
+          ? '${_weatherData!.weather[0].main} - H:${_weatherData!.main.tempMax.toInt()}° L:${_weatherData!.main.tempMin.toInt()}°'
           : 'Weather data not available',
       style: const TextStyle(
         color: Colors.white,
