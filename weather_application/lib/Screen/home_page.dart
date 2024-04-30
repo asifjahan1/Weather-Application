@@ -226,13 +226,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
               // weather data fetching
               _buildWeatherFetching(),
-              const SizedBox(height: 8),
-              _buildWeatherCondition(),
-              //wind speed & humidity part
-              const SizedBox(height: 10),
-              _buildHumidityAndWindSpeed(),
+              // const SizedBox(height: 8),
+              // _buildWeatherCondition(),
+              // //wind speed & humidity part
+              // const SizedBox(height: 10),
+              // _buildHumidityAndWindSpeed(),
 
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
 
               // 3rd part forecasting
               //
@@ -271,6 +271,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ),
               const SizedBox(height: 10),
               _buildHourlyForecast(),
+
+              // Additional container for customization
+              // Container(
+              //   width: 100,
+              //   height: double.infinity,
+              //   color: Colors.white,
+              //   child: Row(
+              //     children: [],
+              //   ),
+              // ),
 
               // Sunrise and Sunset Part
             ],
@@ -395,57 +405,67 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _buildHourlyForecast() {
     return SizedBox(
-      height: 150,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount:
-              _forecastMap['list'] != null ? _forecastMap['list'].length : 0,
-          itemBuilder: (BuildContext context, int index) {
-            var forecast = _forecastMap['list'][index];
-            return _buildHourlyForecastItem(forecast, index);
-          },
-        ),
+      height: 155,
+      // width: 100,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount:
+            _forecastMap['list'] != null ? _forecastMap['list'].length : 0,
+        itemBuilder: (BuildContext context, int index) {
+          var forecast = _forecastMap['list'][index];
+          return _buildHourlyForecastItem(forecast, index);
+        },
       ),
     );
   }
 
   Widget _buildHourlyForecastItem(dynamic forecast, int index) {
-    // Calculate the forecast time based on the current time and index
     DateTime currentTime = DateTime.now();
     DateTime forecastTime = currentTime.add(Duration(hours: index));
-    // DateTime forecastTime =
-    //     DateTime.fromMillisecondsSinceEpoch(forecast['dt'] * 1000);
-    // bool isAM = forecastTime.hour < 12;
-    // String time =
-    //     '${forecastTime.hour % 12 == 0 ? 12 : forecastTime.hour % 12}${isAM ? 'AM' : 'PM'}';
-
-    // Format the forecast time as desired (e.g., 1:00 AM, 2:00 AM, etc.)
     String formattedTime = DateFormat('ha').format(forecastTime);
 
-    return Container(
-      //ajke ami eidike decoration korbo
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            formattedTime,
-            style: const TextStyle(color: Colors.white),
-          ),
-          const SizedBox(height: 10),
-          Image.asset(
-            getWeatherImage(forecast['weather'][0]['main']),
-            width: 40,
-            height: 40,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            '${forecast['main']['temp'].toInt()}°',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ],
+    return ClipRRect(
+      // borderRadius: const BorderRadius.only(
+      //   topLeft: Radius.circular(10),
+      //   topRight: Radius.circular(10),
+      // ),
+      child: Container(
+        width: 80,
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.125),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Text(
+                formattedTime,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 5),
+            Image.asset(
+              fit: BoxFit.cover,
+              getWeatherImage(forecast['weather'][0]['main']),
+              width: 50,
+              height: 50,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '${forecast['main']['temp'].toInt()}°',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -497,44 +517,59 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _buildWeatherFetching() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: _weatherData != null && _weatherData!.weather.isNotEmpty
-              ? Image.asset(
-                  getWeatherImage(_weatherData!.weather[0].main),
-                  fit: BoxFit.cover,
-                )
-              : const SizedBox(),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        // Temperature
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                if (_weatherData != null)
-                  Text(
-                    '${_weatherData!.main.temp.toInt()}°',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 80,
-                    ),
-                  )
-                else
-                  const CircularProgressIndicator(color: Colors.white),
-              ],
-            ),
-          ],
-        ),
-      ],
+    return SingleChildScrollView(
+      // physics: const BouncingScrollPhysics(
+      //     decelerationRate: ScrollDecelerationRate.normal),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 100,
+                height: 100,
+                child: _weatherData != null && _weatherData!.weather.isNotEmpty
+                    ? Image.asset(
+                        getWeatherImage(_weatherData!.weather[0].main),
+                        fit: BoxFit.cover,
+                      )
+                    : const SizedBox(),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              // Temperature
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (_weatherData != null)
+                        Text(
+                          '${_weatherData!.main.temp.toInt()}°',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 80,
+                          ),
+                        )
+                      else
+                        const CircularProgressIndicator(color: Colors.white),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _buildWeatherCondition(),
+          //wind speed & humidity part
+          const SizedBox(height: 10),
+          _buildHumidityAndWindSpeed(),
+          const SizedBox(height: 20),
+          //Sunrise and Sunset part
+        ],
+      ),
     );
   }
 
