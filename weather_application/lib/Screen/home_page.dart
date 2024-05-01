@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, unused_element, unnecessary_string_interpolations, unused_field
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late String _locationName = '';
   late String _areaName = '';
   late final bool _nightTime = false;
+  late Timer _timer;
 
   String getTimeOfDay(DateTime currentTime) {
     int hour = currentTime.hour;
@@ -56,8 +58,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return hour < 6 || hour > 18;
   }
 
-  String getWeatherImage(String weatherCondition) {
-    if (isDayTime()) {
+  String getWeatherImage(String weatherCondition, bool isNight) {
+    if (!isNight) {
       switch (weatherCondition) {
         case 'Rain':
           return 'assets/rainy.png';
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         case 'Rainy':
           return 'assets/rainy.png';
         default:
-          return 'assets/night.png';
+          return 'assets/night-fog.png';
       }
     }
   }
@@ -85,6 +87,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      // Call a function to fetch updated data here
+      // For example, _fetchWeatherData();
+      setState(() {
+        // Update any state variables here if needed
+      });
+    });
     WidgetsBinding.instance.addObserver(this);
     _determinePosition();
     DateTime currentTime = DateTime.now();
@@ -215,104 +224,104 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return Flexible(
       child: Scaffold(
         backgroundColor: const Color(0xFF738BE3),
-        body: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _buildLocationInfo(),
-                const SizedBox(height: 8),
-                _buildWeatherInfo(),
-                const SizedBox(height: 10),
-
-                // weather data fetching
-                _buildWeatherFetching(),
-
-                const SizedBox(height: 8),
-                _buildWeatherCondition(),
-                //wind speed & humidity part
-                const SizedBox(height: 10),
-                _buildHumidityAndWindSpeed(),
-                const SizedBox(height: 20),
-
-                // const SizedBox(height: 8),
-                // _buildWeatherCondition(),
-                // //wind speed & humidity part
-                // const SizedBox(height: 10),
-                // _buildHumidityAndWindSpeed(),
-
-                // const SizedBox(height: 20),
-
-                // 3rd part forecasting
-                //
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                color: const Color(0xFF738BE3),
+                child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        // fetchDataFromForecastURL();
-                      },
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.135),
-                          side: const BorderSide(color: Colors.transparent),
-                        ),
-                        onPressed: () {},
-                        child: const Text(
-                          'Today',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 9),
-                    OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 103, 128, 210),
-                        side: const BorderSide(color: Colors.transparent),
-                      ),
-                      child: const Text(
-                        'Next Days',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    _buildLocationInfo(),
+                    const SizedBox(height: 8),
+                    _buildWeatherInfo(),
                   ],
                 ),
-                const SizedBox(height: 10),
-                _buildHourlyForecast(),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SafeArea(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
 
-                // Sunrise and Sunset Part
-                const SizedBox(height: 25),
-                Column(
-                  children: [
-                    // Container(
-                    //   width: 200, // Cylinder er diameter
-                    //   height: 100, // Cylinder er height
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.blue,
-                    //     borderRadius: BorderRadius.vertical(
-                    //       bottom:
-                    //           Radius.circular(100), // Bottom half circle shape
-                    //       top: Radius.zero, // Top straight line
-                    //     ),
-                    //   ),
-                    // ),
-                    Container(
-                      width: 500, // Cylinder er diameter
-                      height: 500, // Cylinder er height
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(100), // Top half circle shape
-                          bottom: Radius.zero, // Bottom straight line
+                        // weather data fetching
+                        _buildWeatherFetching(),
+
+                        const SizedBox(height: 8),
+                        _buildWeatherCondition(),
+                        //wind speed & humidity part
+                        const SizedBox(height: 10),
+                        _buildHumidityAndWindSpeed(),
+                        const SizedBox(height: 20),
+
+                        // 3rd part forecasting
+                        //
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                // fetchDataFromForecastURL();
+                              },
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.135),
+                                  side: const BorderSide(
+                                      color: Colors.transparent),
+                                ),
+                                onPressed: () {},
+                                child: const Text(
+                                  'Today',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 9),
+                            OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 103, 128, 210),
+                                side:
+                                    const BorderSide(color: Colors.transparent),
+                              ),
+                              child: const Text(
+                                'Next Days',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
+                        const SizedBox(height: 10),
+                        _buildHourlyForecast(),
+
+                        // Sunrise and Sunset Part
+                        const SizedBox(height: 25),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 1,
+                          height: 300,
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white,
+                                Color.fromARGB(255, 0, 140, 255), // End color
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.elliptical(200, 100),
+                              topRight: Radius.elliptical(200, 100),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                )
-              ],
-            ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -453,11 +462,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     DateTime forecastTime = currentTime.add(Duration(hours: index));
     String formattedTime = DateFormat('ha').format(forecastTime);
 
+    bool isNightTime = isNight(forecastTime);
+    String weatherCondition = forecast['weather'][0]['main'];
+
     return ClipRRect(
-      // borderRadius: const BorderRadius.only(
-      //   topLeft: Radius.circular(10),
-      //   topRight: Radius.circular(10),
-      // ),
       child: Container(
         width: 80,
         margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -472,24 +480,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               padding: const EdgeInsets.all(15),
               child: Text(
                 formattedTime,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: isNightTime ? Colors.white : Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             const SizedBox(height: 5),
             Image.asset(
+              getWeatherImage(weatherCondition, isNightTime),
               fit: BoxFit.cover,
-              getWeatherImage(forecast['weather'][0]['main']),
-              width: 50,
-              height: 50,
+              width: 55,
+              height: 55,
             ),
             const SizedBox(height: 10),
             Text(
               '${forecast['main']['temp'].toInt()}°',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isNightTime ? Colors.white : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -556,7 +564,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               height: 100,
               child: _weatherData != null && _weatherData!.weather.isNotEmpty
                   ? Image.asset(
-                      getWeatherImage(_weatherData!.weather[0].main),
+                      getWeatherImage(
+                        _weatherData!.weather[0].main,
+                        isNight(DateTime.now()), // Pass day or night
+                      ),
                       fit: BoxFit.cover,
                     )
                   : const SizedBox(),
@@ -597,7 +608,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return Text(
       _weatherData != null
           ? '${_weatherData!.weather[0].main} - H:${_weatherData!.main.tempMax.toInt()}° L:${_weatherData!.main.tempMin.toInt()}°'
-          : 'Weather data not available',
+          : '',
       style: const TextStyle(
         color: Colors.white,
         fontSize: 17,
