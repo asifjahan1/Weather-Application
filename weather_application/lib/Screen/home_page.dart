@@ -444,11 +444,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _buildHourlyForecast() {
     return SizedBox(
       height: 155,
-      // width: 100,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount:
-            _forecastMap['list'] != null ? _forecastMap['list'].length : 0,
+        itemCount: _forecastMap['list'] != null
+            ? _forecastMap['list'].length > 12
+                ? 12
+                : _forecastMap['list'].length
+            : 0,
         itemBuilder: (BuildContext context, int index) {
           var forecast = _forecastMap['list'][index];
           return _buildHourlyForecastItem(forecast, index);
@@ -479,9 +481,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             Padding(
               padding: const EdgeInsets.all(15),
               child: Text(
-                formattedTime,
-                style: TextStyle(
-                  color: isNightTime ? Colors.white : Colors.white,
+                index == 0 ? 'Now' : formattedTime,
+                style: const TextStyle(
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
