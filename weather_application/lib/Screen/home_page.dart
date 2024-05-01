@@ -459,6 +459,42 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
+  // new updated with image file
+  //
+  // Widget _buildHourlyForecast() {
+  //   return SizedBox(
+  //     height: 155,
+  //     child: ListView.builder(
+  //       scrollDirection: Axis.horizontal,
+  //       itemCount: _forecastMap['list'] != null
+  //           ? _forecastMap['list'].length > 12
+  //               ? 12
+  //               : _forecastMap['list'].length
+  //           : 0,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         if (index == 0) {
+  //           return Column(
+  //             children: [
+  //               _buildHourlyForecastItem(_forecastMap['list'][index], index),
+  //               const SizedBox(height: 3),
+  //               _buildFirstItemContainer(),
+  //             ],
+  //           );
+  //         } else {
+  //           // Show hourly forecast item for other indices
+  //           return _buildHourlyForecastItem(_forecastMap['list'][index], index);
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // Widget _buildFirstItemContainer() {
+  //   return Image.asset(
+  //     'assets/Ellipse 1.png',
+  //   );
+  // }
+
   Widget _buildHourlyForecastItem(dynamic forecast, int index) {
     DateTime currentTime = DateTime.now();
     DateTime forecastTime = currentTime.add(Duration(hours: index));
