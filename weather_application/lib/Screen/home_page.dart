@@ -215,89 +215,104 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return Flexible(
       child: Scaffold(
         backgroundColor: const Color(0xFF738BE3),
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildLocationInfo(),
-              const SizedBox(height: 8),
-              _buildWeatherInfo(),
-              const SizedBox(height: 10),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _buildLocationInfo(),
+                const SizedBox(height: 8),
+                _buildWeatherInfo(),
+                const SizedBox(height: 10),
 
-              // weather data fetching
-              _buildWeatherFetching(),
+                // weather data fetching
+                _buildWeatherFetching(),
 
-              const SizedBox(height: 8),
-              _buildWeatherCondition(),
-              //wind speed & humidity part
-              const SizedBox(height: 10),
-              _buildHumidityAndWindSpeed(),
-              const SizedBox(height: 20),
+                const SizedBox(height: 8),
+                _buildWeatherCondition(),
+                //wind speed & humidity part
+                const SizedBox(height: 10),
+                _buildHumidityAndWindSpeed(),
+                const SizedBox(height: 20),
 
-              // const SizedBox(height: 8),
-              // _buildWeatherCondition(),
-              // //wind speed & humidity part
-              // const SizedBox(height: 10),
-              // _buildHumidityAndWindSpeed(),
+                // const SizedBox(height: 8),
+                // _buildWeatherCondition(),
+                // //wind speed & humidity part
+                // const SizedBox(height: 10),
+                // _buildHumidityAndWindSpeed(),
 
-              // const SizedBox(height: 20),
+                // const SizedBox(height: 20),
 
-              // 3rd part forecasting
-              //
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // fetchDataFromForecastURL();
-                    },
-                    child: OutlinedButton(
+                // 3rd part forecasting
+                //
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // fetchDataFromForecastURL();
+                      },
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.135),
+                          side: const BorderSide(color: Colors.transparent),
+                        ),
+                        onPressed: () {},
+                        child: const Text(
+                          'Today',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 9),
+                    OutlinedButton(
+                      onPressed: () {},
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.135),
+                        backgroundColor:
+                            const Color.fromARGB(255, 103, 128, 210),
                         side: const BorderSide(color: Colors.transparent),
                       ),
-                      onPressed: () {},
                       child: const Text(
-                        'Today',
+                        'Next Days',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 9),
-                  OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 128, 210),
-                      side: const BorderSide(color: Colors.transparent),
-                    ),
-                    child: const Text(
-                      'Next Days',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              _buildHourlyForecast(),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                _buildHourlyForecast(),
 
-              // Sunrise and Sunset Part
-              const SizedBox(height: 10),
-              // Expanded(
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(100),
-              //     child: Column(
-              //       children: [
-              //         Container(
-              //           width: 200,
-              //           height: 200,
-              //           decoration:
-              //               const BoxDecoration(color: Color(0xFFF7F8FA)),
-              //         )
-              //       ],
-              //     ),
-              //   ),
-              // ),
-            ],
+                // Sunrise and Sunset Part
+                const SizedBox(height: 25),
+                Column(
+                  children: [
+                    // Container(
+                    //   width: 200, // Cylinder er diameter
+                    //   height: 100, // Cylinder er height
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.blue,
+                    //     borderRadius: BorderRadius.vertical(
+                    //       bottom:
+                    //           Radius.circular(100), // Bottom half circle shape
+                    //       top: Radius.zero, // Top straight line
+                    //     ),
+                    //   ),
+                    // ),
+                    Container(
+                      width: 500, // Cylinder er diameter
+                      height: 500, // Cylinder er height
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(100), // Top half circle shape
+                          bottom: Radius.zero, // Bottom straight line
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -445,7 +460,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       // ),
       child: Container(
         width: 80,
-        margin: const EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.125),
           borderRadius: BorderRadius.circular(50),
