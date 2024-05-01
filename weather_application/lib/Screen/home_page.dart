@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:weather_application/Model/weather_data.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_application/Screen/next_days_weather.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -286,9 +287,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 side:
                                     const BorderSide(color: Colors.transparent),
                               ),
-                              child: const Text(
-                                'Next Days',
-                                style: TextStyle(color: Colors.white),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const NextDays()),
+                                  );
+                                },
+                                child: const Hero(
+                                  tag: 'nextDaysText',
+                                  child: Text(
+                                    'Next Days',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -327,6 +340,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       ),
     );
   }
+
+  //
+  //
+  //
 
   Widget _buildHumidityAndWindSpeed() {
     if (_weatherData != null) {
